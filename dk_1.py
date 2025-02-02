@@ -76,7 +76,8 @@ if __name__ == "__main__":
         err_msg = f"{type(e).__name__} {timestamp_log}: {e}\n"
 #         Record error to error log if there's a failure. But that's not all...
         write_log("error", err_msg)
-#         ...Email the IT guy about the error! NOTE: Without an email server, this only appears to only succeed with \
+#         ...Email the 'IT guy' about the error! Feel free to try out your own email address!
+#         NOTE: Without an email server, this only appears to only succeed with \
 #         work/ domain email addresses like the below, and not with Hotmail or Gmail etc 
         email_server = smtplib.SMTP("nickhartprojects.co.uk", 25)
         email_server.ehlo()
