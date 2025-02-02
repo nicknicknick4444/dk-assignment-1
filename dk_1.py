@@ -1,5 +1,5 @@
 # IMPORT MODULES
-import requests, json, csv, datetime, sys, smtplib
+import requests, json, csv, datetime, sys, smtplib, time
 import pandas as pd
 import numpy as np
 
@@ -26,10 +26,10 @@ def cat_checker(this_cat):
             return i
 
 # Checks if 'publication_date' is after the user's specified year (B00OLEAN OUTPUT): 
-def after_year_check(pub_date, year):
-# Grabs 4 chars of data string, converts to int type and \
-# returns True if 'pub_date' is greater than the 'year' arg
-    return int(pub_date[:4]) > year
+def after_year_check(pub_date):
+#     Returns True if the date is later than 2020
+    limit = time.strptime("2020-12-31", "%Y-%m-%d")
+    return time.strptime(pub_date, "%Y-%m-%d") > limit
 
 # .txt log-writer:
 def write_log(err_type, message):
@@ -49,7 +49,7 @@ def main():
 
 #     Add 20% to prices if book's publication_date is later than 2020: 
     filt_data2 = filt_data.copy() # <-- Note: Making this copy prevents unsightly "copy of a slice" warning
-    filt_data2["price"] = np.where(filt_data2["publication_date"].apply(lambda x: after_year_check(x, 2020)), \
+    filt_data2["price"] = np.where(filt_data2["publication_date"].apply(lambda x: after_year_check(x)), \
                                    round(filt_data2["price"] * 1.2, 2), filt_data2["price"].apply(lambda x: "%.2f" % x))
 
 #     Enable these print statements to check the outputs during testing:
@@ -74,10 +74,9 @@ if __name__ == "__main__":
 #         Faliure: 
         print("--AN ERROR HAS OCCURRED!--\nERROR TYPE:", type(e).__name__, "\nMESSAGE:", e, file=sys.stderr)
         err_msg = f"{type(e).__name__} {timestamp_log}: {e}\n"
-#         Record error to error log if there's a failure. But that's not all...
+#         Record error to error log. But that's not all...
         write_log("error", err_msg)
-#         ...Email the 'IT guy' about the error! Feel free to try out your own email address!
-#         NOTE: Without an email server, this only appears to only succeed with \
+#         ...Email the IT guy about the error! NOTE: Without an email server, this only appears to only succeed with \
 #         work/ domain email addresses like the below, and not with Hotmail or Gmail etc 
         email_server = smtplib.SMTP("nickhartprojects.co.uk", 25)
         email_server.ehlo()
