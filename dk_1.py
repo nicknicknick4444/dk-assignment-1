@@ -74,7 +74,7 @@ if __name__ == "__main__":
 #         Faliure: 
         print("--AN ERROR HAS OCCURRED!--\nERROR TYPE:", type(e).__name__, "\nMESSAGE:", e, file=sys.stderr)
         err_msg = f"{type(e).__name__} {timestamp_log}: {e}\n"
-#         Record error to error log. But that's not all...
+#         Record error to error log if there's a failure. But that's not all...
         write_log("error", err_msg)
 #         ...Email the IT guy about the error! NOTE: Without an email server, this only appears to only succeed with \
 #         work/ domain email addresses like the below, and not with Hotmail or Gmail etc 
